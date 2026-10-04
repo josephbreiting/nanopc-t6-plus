@@ -1,0 +1,17 @@
+Place holder for NanoPC T6 Plus Setup disk image
+bootable from either loader via microsd or usb
+it can...
+
+[install]
+install edk2-rockchip uefi firmware
+restore system image to mmc/nvme
+generate grub.cfg to boot system image
+
+[save/edit]
+move/edit files
+
+[apps]
+backup current system to image
+
+[original]
+restore the original rockchip loader
