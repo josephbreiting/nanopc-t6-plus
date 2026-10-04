@@ -1,0 +1,112 @@
+GOAL: Minimizing power usage for everyday pc/tv use
+GOAL: Provide a low power 4k mediaplayer/internet browser/fileserver
+
+Bought a rk3588 based soc,  orginally i was planning on a raspberry pi 5.
+Found Armbian website, saw platinium supported products. Choose NanoPC T6 LTS from the 20 listed.
+While selecting options I choose 16GB version, but this was actually a NanoPC T6 Plus instead.
+
+Offical image tests...
+ -Android
+ -Linux
+
+testing the official images the hardware did work but the video acceleration required a custom chrome browser for streaming video and local files used mpv which includes builtin support for the rockchip decoder. Drm would only work on some images but not all.
+
+I watch streaming video not broadcast/cable tv. 
+I browse the internet, but i dont like google/chrome/firefox,  I like librewolf and brave. 
+View/share local digital formats (e.g. Listen to music, watch videos, run software, etc)
+
+GOAL: Proper multimedia/internet desktop for rk3588 soc
+GOAL: Remove or minimize custom software setups
+
+Alternative image tests...
+ -Kodi
+ -Armbian
+ 
+To verify the hardware can actually play atleast 4k I tested a kodi image, verifying performance
+[X] 4k hardware accelerated playback verified
+Started to test every image offered on wiki and armbian site, none seem to support generic acceration standards, discovered rockchip-vaapi gitihub.
+Testing rockchip-vaapi on multiple images, but ubuntu-rockchip seems to perform best
+[X] hardware accelerated vp9 web video (youtube, librewolf)
+Testing DRM support was a crap shoot, works on some setups but fails on ubuntu-rockchip atm.
+[/] DRM installs/works on some images, low priority
+
+Started to look outside official channels, found ubuntu-rockchip github
+Some hardware quirks, missing usb2 ports, no bluetooth detected, no analog audio out
+Local video playback was excellent
+
+Browser usage/performace tests...
+-web browser seems to struggle with some website and i think its software related.
+-graphical glitches in browser
+-video playback blocking after about 40 mins of playback, refreshing page fixes for another 40m
+
+I have a few cheap ip cameras, turns out theres alot of security issues with those.
+I heard frigate is a good free private local option, but need hardware accelerated video.
+I built a spare pc for frigate and purchased a memryx ai accelerator. Used 21.5w idle,rec3.
+Discovered frigate install instructions for rk3588 on radxa wiki.
+
+GOAL: Replace frigate server
+GOAL: Isolate wireless ip camera
+
+Independent images/software/info...
+ -Ubuntu-Rockchip
+ -rockchip-vaapi
+ -radxa frigate install wiki
+
+Frigate install tested working with hardware acceleration and npu support on ubuntu-rockchip.
+ -idle,rec3 = 9.5w
+ -browsing,rec3 = 10.5w
+ -playing4k,rec3 = 11.5w
+
+Hotspot for ip cameras works, need to start at boot, and isolate from the internet by default.
+Will come back to this later....
+
+Remaining Issues...
+ -graphical glitches in web browsers
+ -headphone jack not working on ubuntu-rockchip
+ -usb2 ports off
+ -bluetooth on wifi card not detected
+
+Learned what device trees are and how they line the hardware up with the kernel.
+My hardware issues are probably related to the device trees
+device-trees are load by u-boot for the kernel
+
+Device trees...
+ -changing devicetrees
+ -changing from uboot to grub
+ -edk2-rk3588 uefi loader
+ 
+Fixes...
+ -edk2-rk3588 boots from more devices (e.g. sd, mmc, usb, nvme, pxe)
+ -grub supports manual device-tree loading
+ -changing the dtb file with grub fixed usb2 ports and bluetooth
+ -easier for me to test custom kernels that I compile and their device trees
+
+Moving current rootfs from mmc to nvme
+BROKEN: increase swapfile to ram size, but suspend failed not sure if it worked before but ignoring suspend for now. low priority
+ -backup 64gb mmc
+ -armbian backup sdcard missing mmc support, what?
+ -using ubuntu arm64 iso to image mmc, really slow 30mb/s but worked, why so slow
+ -restore 64gb mmc image to 256gb nvme
+ -honestly saw very little improvement in boot speed or browser opening with rootfs on nvme
+
+||============||
+|| << HERE >> ||
+||============||
+
+My Custom Custom System...
+ -full and proper grub install
+ -minimal-linux-live rootfs
+ -ubuntu-core rootfs
+ -linux-from-scratch rootfs
+ 
+Ubuntu-core
+ -lockout kernel changes
+ -updating grub config
+ -updating initrd 
+
+What about swap (only if suspend actually work)...
+ -swapfile to swap partition
+ -swap on mmc vs nvme
+
+?GOAL: Replace Home Assistant OS SOC
+?GOAL: Isolate wireless iot devices
