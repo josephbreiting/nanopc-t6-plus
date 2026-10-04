@@ -1,0 +1,2 @@
+Place holder for my NanoPC T6 Plus disk image
+ubuntu-rockchip, rockchip-vaapi, and edk2-rockchip
